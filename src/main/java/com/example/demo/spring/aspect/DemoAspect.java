@@ -9,6 +9,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.annotation.Annotation;
 
 /**
  * @author lianght1
@@ -28,6 +29,8 @@ public class DemoAspect {
     public void before1(JoinPoint joinPoint){
         System.out.println("--------执行before1()---------");
         MethodSignature ms = (MethodSignature) joinPoint.getSignature();
+        //参数上注解
+//        Annotation[][] annotations = ms.getMethod().getParameterAnnotations();
         Mark mark = ms.getMethod().getAnnotation(Mark.class);
         System.out.println(mark == null ? "" : "--------拿到了注解Mark:------------");
         System.out.println("------------Marked值为：" + mark.marked() + "----------------------");
