@@ -1,25 +1,93 @@
 spring:
   datasource:
-    type: com.zaxxer.hikari.HikariDataSource
+#    type: com.zaxxer.hikari.HikariDataSource
+    type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:mysql://127.0.0.1:3306/test?characterEncoding=UTF-8
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: Leo
-    password: 111
-    # Á¬½Ó³Ø
+    username: root
+    password: 5512853xin
+    # ï¿½ï¿½ï¿½Ó³ï¿½
     hikari:
-      #×îĞ¡¿ÕÏĞÁ¬½ÓÊı
+      #ï¿½ï¿½Ğ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
       minimum-idle: 5
-      # ¿ÕÏĞÁ¬½Ó´æ»î×î´óÊ±¼ä£¬Ä¬ÈÏ600000£¨10·ÖÖÓ£©
+      # ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó´ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä£¬Ä¬ï¿½ï¿½600000ï¿½ï¿½10ï¿½ï¿½ï¿½Ó£ï¿½
       idle-timeout: 180000
-      # Á¬½Ó³Ø×î´óÁ¬½ÓÊı£¬Ä¬ÈÏÊÇ10
+      # ï¿½ï¿½ï¿½Ó³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¬ï¿½ï¿½ï¿½ï¿½10
       maximum-pool-size: 10
-      # ´ËÊôĞÔ¿ØÖÆ´Ó³Ø·µ»ØµÄÁ¬½ÓµÄÄ¬ÈÏ×Ô¶¯Ìá½»ĞĞÎª,Ä¬ÈÏÖµ£ºtrue
+      # ï¿½ï¿½ï¿½ï¿½ï¿½Ô¿ï¿½ï¿½Æ´Ó³Ø·ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½Óµï¿½Ä¬ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½á½»ï¿½ï¿½Îª,Ä¬ï¿½ï¿½Öµï¿½ï¿½true
       auto-commit: true
-      # ´ËÊôĞÔ¿ØÖÆ³ØÖĞÁ¬½ÓµÄ×î³¤ÉúÃüÖÜÆÚ£¬Öµ0±íÊ¾ÎŞÏŞÉúÃüÖÜÆÚ£¬Ä¬ÈÏ1800000¼´30·ÖÖÓ
+      # ï¿½ï¿½ï¿½ï¿½ï¿½Ô¿ï¿½ï¿½Æ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½î³¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú£ï¿½Öµ0ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú£ï¿½Ä¬ï¿½ï¿½1800000ï¿½ï¿½30ï¿½ï¿½ï¿½ï¿½
       max-lifetime: 1800000
-      # Êı¾İ¿âÁ¬½Ó³¬Ê±Ê±¼ä,Ä¬ÈÏ30Ãë£¬¼´30000
+      # ï¿½ï¿½ï¿½İ¿ï¿½ï¿½ï¿½ï¿½Ó³ï¿½Ê±Ê±ï¿½ï¿½,Ä¬ï¿½ï¿½30ï¿½ë£¬ï¿½ï¿½30000
       connection-timeout: 30000
       connection-test-query: SELECT 1
+    first:
+      url: jdbc:mysql://localhost:3306/test1?characterEncoding=UTF-8
+      username: root
+      password: 5512853xin
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    second:
+      url: jdbc:mysql://localhost:3306/test2?characterEncoding=UTF-8
+      username: root
+      password: 5512853xin
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+  spring:
+    shardingsphere:
+      # æ•°æ®æºé…ç½®
+      datasource:
+        common:
+          # æ•°æ®åº“é©±åŠ¨ç±»å
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          # æ•°æ®åº“è¿æ¥æ± ç±»åç§°
+          type: com.zaxxer.hikari.HikariDataSource
+        # æ•°æ®æºåç§°ï¼Œå¤šæ•°æ®æºä»¥é€—å·åˆ†éš”
+        names: db0
+        db0:
+          jdbc-url: jdbc:mysql://localhost:3306/test1?characterEncoding=UTF-8
+          username: root
+          password: 5512853xin
+        db1:
+          jdbc-url: jdbc:mysql://localhost:3306/test2?characterEncoding=UTF-8
+          username: root
+          password: 5512853xin
+      # è§„åˆ™é…ç½®
+      rules:
+        sharding:
+          # åˆ†ç‰‡ç®—æ³•é…ç½®
+          sharding-algorithms:
+            table-inline:
+              # åˆ†ç‰‡ç®—æ³•ç±»å‹ https://shardingsphere.apache.org/document/current/cn/user-manual/shardingsphere-jdbc/configuration/built-in-algorithm/sharding/
+              type: INLINE
+              props:
+                # åˆ†ç‰‡ç®—æ³•çš„è¡Œè¡¨è¾¾å¼
+                algorithm-expression: course_$->{ cid % 2 + 1 }
+          # åˆ†å¸ƒå¼åºåˆ—ç®—æ³•é…ç½®
+          key-generators:
+            snowflake:
+              # åˆ†å¸ƒå¼åºåˆ—ç®—æ³•ï¼ˆé›ªèŠ±ç®—æ³•ï¼šSNOWFLAKEï¼› UUIDï¼šUUIDï¼‰ï¼ˆæ³¨ï¼šUUIDæ²¡æœ‰propsé…ç½®ï¼‰ https://shardingsphere.apache.org/document/current/cn/user-manual/shardingsphere-jdbc/configuration/built-in-algorithm/keygen/
+              type: SNOWFLAKE
+              # åˆ†å¸ƒå¼åºåˆ—ç®—æ³•å±æ€§é…ç½®
+              props:
+                # å·¥ä½œæœºå™¨å”¯ä¸€æ ‡è¯†
+                worker-id: 1
+          tables:
+            # é€»è¾‘è¡¨åç§°
+            course:
+              # è¡Œè¡¨è¾¾å¼æ ‡è¯†ç¬¦å¯ä»¥ä½¿ç”¨ ${...} æˆ– $->{...}ï¼Œä½†å‰è€…ä¸ Spring æœ¬èº«çš„å±æ€§æ–‡ä»¶å ä½ç¬¦å†²çªï¼Œå› æ­¤åœ¨ Spring ç¯å¢ƒä¸­ä½¿ç”¨è¡Œè¡¨è¾¾å¼æ ‡è¯†ç¬¦å»ºè®®ä½¿ç”¨ $->{...}
+              actual-data-nodes: db0.course_$->{1..2}
+              # åˆ†è¡¨ç­–ç•¥
+              table-strategy:
+                standard:
+                  # åˆ†ç‰‡åˆ—åç§°
+                  sharding-column: cid
+                  # åˆ†ç‰‡ç®—æ³•åç§°
+                  sharding-algorithm-name: table-inline
+      # å±æ€§é…ç½®
+      props:
+        # å±•ç¤ºä¿®æ”¹ä»¥åçš„sqlè¯­å¥
+        sql-show: true
+
 
 
 config:
@@ -40,7 +108,8 @@ config:
         name: KK100
 
     driverName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/test?characterEncoding=UTF-8
-    user: Leo
-    passWord: 111
+    url: jdbc:mysql://127.0.0.1:3306/demo?characterEncoding=UTF-8
+    user: root
+    passWord: 5512853xin
+
 

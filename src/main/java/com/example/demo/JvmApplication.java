@@ -1,22 +1,21 @@
 package com.example.demo;
 
-import com.example.demo.spring.configure.DemoConfigure;
-import com.example.demo.spring.domain.ISchool;
-import com.example.demo.spring.domain.Klass;
-import com.example.demo.spring.domain.Person;
-import com.example.demo.spring.domain.Student;
+import com.example.demo.db.dynamicdatasource.DBService;
+import com.example.demo.db.dynamicdatasource.DynamicDataSourceConfig;
+import com.example.demo.spring.domain.*;
 import com.example.demo.spring.jdbc.JDBCUtils;
 import com.example.demo.spring.utils.SpringApplicationContext;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 
 import java.sql.SQLException;
+import java.util.List;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
+@Import({DynamicDataSourceConfig.class})
 public class JvmApplication {
 
     public static void main(String[] args) {
@@ -55,6 +54,10 @@ public class JvmApplication {
         class1.dong();
 
         System.out.println("   context.getBeanDefinitionNames() ===>> "+ String.join(",", context.getBeanDefinitionNames()));
+
+        DBService dbService = (DBService) context.getBean("DBServiceImpl");
+        List<User> user1 = dbService.getFirstDBUser();
+        List<User> user2 = dbService.getSecondDBUser();
 
         try {
             JDBCUtils.doOriginalJDBS();
