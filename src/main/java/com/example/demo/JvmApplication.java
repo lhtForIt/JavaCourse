@@ -2,9 +2,12 @@ package com.example.demo;
 
 import com.example.demo.db.dynamicdatasource.DBService;
 import com.example.demo.db.dynamicdatasource.DynamicDataSourceConfig;
+import com.example.demo.db.shardingsphere.Course;
+import com.example.demo.db.shardingsphere.CourseService;
 import com.example.demo.spring.domain.*;
 import com.example.demo.spring.jdbc.JDBCUtils;
 import com.example.demo.spring.utils.SpringApplicationContext;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -14,8 +17,10 @@ import org.springframework.context.annotation.Import;
 import java.sql.SQLException;
 import java.util.List;
 
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-@Import({DynamicDataSourceConfig.class})
+@SpringBootApplication
+@MapperScan("com.example.demo.db.*")
+//@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
+//@Import({DynamicDataSourceConfig.class})
 public class JvmApplication {
 
     public static void main(String[] args) {
@@ -56,8 +61,15 @@ public class JvmApplication {
         System.out.println("   context.getBeanDefinitionNames() ===>> "+ String.join(",", context.getBeanDefinitionNames()));
 
         DBService dbService = (DBService) context.getBean("DBServiceImpl");
+        dbService.insertFirstDBUser();
         List<User> user1 = dbService.getFirstDBUser();
         List<User> user2 = dbService.getSecondDBUser();
+
+        CourseService courseService = (CourseService) context.getBean("courseServiceImpl");
+        Course c = initData();
+        courseService.insertFirstDBUser(c);
+        List<Course> course1 = courseService.getFirstCourse();
+        List<Course> course2 = courseService.getSecondCourse();
 
         try {
             JDBCUtils.doOriginalJDBS();
@@ -67,6 +79,15 @@ public class JvmApplication {
             e.printStackTrace();
         }
 
+    }
+
+    private static Course initData() {
+        Course c = new Course();
+        c.setCid(6L);
+        c.setCname("Test");
+        c.setUserId(6L);
+        c.setCstatus("Y");
+        return c;
     }
 
 }

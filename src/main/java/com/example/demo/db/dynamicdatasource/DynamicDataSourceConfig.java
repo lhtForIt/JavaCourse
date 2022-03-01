@@ -1,6 +1,6 @@
 package com.example.demo.db.dynamicdatasource;
 
-import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
+import com.alibaba.druid.pool.DruidDataSource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +14,7 @@ import java.util.Map;
  * @author Leo liang
  * @Date 2022/2/27
  */
+//使用shardingsphere时要将这个配置去掉
 @Configuration
 public class DynamicDataSourceConfig {
 
@@ -21,14 +22,16 @@ public class DynamicDataSourceConfig {
     @ConfigurationProperties("spring.datasource.first")
     public DataSource firstDataSource(){
 
-        return DruidDataSourceBuilder.create().build();
+//        return DruidDataSourceBuilder.create().build();
+        return new DruidDataSource();
     }
 
     @Bean
     @ConfigurationProperties("spring.datasource.second")
     public DataSource secondDataSource(){
 
-        return DruidDataSourceBuilder.create().build();
+//        return DruidDataSourceBuilder.create().build();
+        return new DruidDataSource();
     }
 
     @Bean

@@ -1,4 +1,6 @@
 spring:
+  main:
+    allow-bean-definition-overriding: true
   datasource:
 #    type: com.zaxxer.hikari.HikariDataSource
     type: com.alibaba.druid.pool.DruidDataSource
@@ -32,63 +34,72 @@ spring:
       password: 5512853xin
       driver-class-name: com.mysql.cj.jdbc.Driver
 
-  spring:
-    shardingsphere:
-      # 数据源配置
-      datasource:
-        common:
-          # 数据库驱动类名
-          driver-class-name: com.mysql.cj.jdbc.Driver
-          # 数据库连接池类名称
-          type: com.zaxxer.hikari.HikariDataSource
-        # 数据源名称，多数据源以逗号分隔
-        names: db0
-        db0:
-          jdbc-url: jdbc:mysql://localhost:3306/test1?characterEncoding=UTF-8
-          username: root
-          password: 5512853xin
-        db1:
-          jdbc-url: jdbc:mysql://localhost:3306/test2?characterEncoding=UTF-8
-          username: root
-          password: 5512853xin
-      # 规则配置
-      rules:
-        sharding:
-          # 分片算法配置
-          sharding-algorithms:
-            table-inline:
-              # 分片算法类型 https://shardingsphere.apache.org/document/current/cn/user-manual/shardingsphere-jdbc/configuration/built-in-algorithm/sharding/
-              type: INLINE
-              props:
-                # 分片算法的行表达式
-                algorithm-expression: course_$->{ cid % 2 + 1 }
-          # 分布式序列算法配置
-          key-generators:
-            snowflake:
-              # 分布式序列算法（雪花算法：SNOWFLAKE； UUID：UUID）（注：UUID没有props配置） https://shardingsphere.apache.org/document/current/cn/user-manual/shardingsphere-jdbc/configuration/built-in-algorithm/keygen/
-              type: SNOWFLAKE
-              # 分布式序列算法属性配置
-              props:
-                # 工作机器唯一标识
-                worker-id: 1
-          tables:
-            # 逻辑表名称
-            course:
-              # 行表达式标识符可以使用 ${...} 或 $->{...}，但前者与 Spring 本身的属性文件占位符冲突，因此在 Spring 环境中使用行表达式标识符建议使用 $->{...}
-              actual-data-nodes: db0.course_$->{1..2}
-              # 分表策略
-              table-strategy:
-                standard:
-                  # 分片列名称
-                  sharding-column: cid
-                  # 分片算法名称
-                  sharding-algorithm-name: table-inline
-      # 属性配置
-      props:
-        # 展示修改以后的sql语句
-        sql-show: true
-
-
+  shardingsphere:
+    # 数据源配置
+    datasource:
+      # 数据源名称，多数据源以逗号分隔
+      names: ds0,ds1
+      ds0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/test1?characterEncoding=UTF-8
+        username: root
+        password: 5512853xin
+      ds1:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/test2?characterEncoding=UTF-8
+        username: root
+        password: 5512853xin
+    # 规则配置
+    rules:
+      sharding:
+        tables:
+          # 逻辑表名称
+          t_order:
+            # 行表达式标识符可以使用 ${...} 或 $->{...}，但前者与 Spring 本身的属性文件占位符冲突，因此在 Spring 环境中使用行表达式标识符建议使用 $->{...}
+            actual-data-nodes: ds$->{0..1}.course_$->{1..2}
+            # 配置分库策略
+            database-strategy:
+              standard:
+                sharding-column: cid
+                sharding-algorithm-name: database-inline
+            # 分表策略
+            table-strategy:
+              standard:
+                # 表分片列名称
+                sharding-column: user_id
+                # 分片算法名称
+                sharding-algorithm-name: table-inline
+            # 表主键算法
+            key-generate-strategy:
+              column: cid
+              key-generator-name: snowflake
+        # 分片算法配置
+        sharding-algorithms:
+          database-inline:
+            type: INLINE
+            props:
+              algorithm-expression: ds$->{cid % 2}
+          table-inline:
+            # 分片算法类型
+            type: INLINE
+            props:
+              # 分片算法的行表达式
+              algorithm-expression: course_$->{user_id % 2 + 1}
+        # 分布式序列算法配置
+        key-generators:
+          snowflake:
+            # 分布式序列算法（雪花算法：SNOWFLAKE； UUID：UUID）
+            type: SNOWFLAKE
+            # 分布式序列算法属性配置
+            props:
+              # 工作机器唯一标识
+              worker-id: 123
+    props:
+      # 展示修改以后的sql语句
+      sql:
+        show: true
 
 config:
   demo:

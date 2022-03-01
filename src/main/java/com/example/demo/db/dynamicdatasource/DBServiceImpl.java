@@ -21,6 +21,11 @@ public class DBServiceImpl implements DBService{
         return mapper.getFirstDBUser();
     }
 
+    @Override
+    public void insertFirstDBUser() {
+
+    }
+
     @CurDataSource(name = "second")
     @Override
     public List<User> getSecondDBUser() {

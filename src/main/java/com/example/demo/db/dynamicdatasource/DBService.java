@@ -14,6 +14,8 @@ public interface DBService {
 
     List<User> getFirstDBUser();
 
+    void insertFirstDBUser();
+
     List<User> getSecondDBUser();
 
 }
