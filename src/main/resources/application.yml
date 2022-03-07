@@ -10,17 +10,11 @@ spring:
     password: 5512853xin
     # ���ӳ�
     hikari:
-      #��С����������
       minimum-idle: 5
-      # �������Ӵ�����ʱ�䣬Ĭ��600000��10���ӣ�
       idle-timeout: 180000
-      # ���ӳ������������Ĭ����10
       maximum-pool-size: 10
-      # �����Կ��ƴӳط��ص����ӵ�Ĭ���Զ��ύ��Ϊ,Ĭ��ֵ��true
       auto-commit: true
-      # �����Կ��Ƴ������ӵ���������ڣ�ֵ0��ʾ�����������ڣ�Ĭ��1800000��30����
       max-lifetime: 1800000
-      # ���ݿ����ӳ�ʱʱ��,Ĭ��30�룬��30000
       connection-timeout: 30000
       connection-test-query: SELECT 1
     first:
