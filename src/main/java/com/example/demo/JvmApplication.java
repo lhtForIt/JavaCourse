@@ -83,6 +83,7 @@ public class JvmApplication {
             redisTemplate.convertAndSend("leoChannel","hello world");
 
 
+
         }catch (Exception e){
             e.printStackTrace();
         }finally {
