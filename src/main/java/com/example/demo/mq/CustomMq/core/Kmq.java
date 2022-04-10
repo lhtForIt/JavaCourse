@@ -30,6 +30,7 @@ public final class Kmq {
     }
 
     public KmqMessage poll() throws Exception {
+        consumerIndex++;
         return queue.poll();
     }
     public KmqMessage poll(int offset) throws Exception {

@@ -4,6 +4,7 @@ import com.example.demo.db.dynamicdatasource.DBService;
 import com.example.demo.db.dynamicdatasource.DynamicDataSourceConfig;
 import com.example.demo.db.shardingsphere.Course;
 import com.example.demo.db.shardingsphere.CourseService;
+import com.example.demo.mq.kafka.entity.produce.KafkaProduce;
 import com.example.demo.redis.RedisLockUtils;
 import com.example.demo.spring.domain.*;
 import com.example.demo.spring.jdbc.JDBCUtils;
@@ -90,6 +91,8 @@ public class JvmApplication {
             RedisLockUtils.unLock("leo", uuid);
         }
 
+        KafkaProduce kafkaProduce = (KafkaProduce) context.getBean("kafkaProduce");
+        kafkaProduce.send();
 
 
 //        DBService dbService = (DBService) context.getBean("DBServiceImpl");
